@@ -1,0 +1,5 @@
+### app1
+GET http://localhost:3000
+
+### app2
+GET http://localhost:3001
