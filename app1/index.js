@@ -2,13 +2,14 @@
 
 import express from "express";
 import Kafka from "node-rdkafka";
+import eventType from "./eventType.js";
 
 const app = express();
 
 const kafka = new Kafka.KafkaConsumer(
   {
     "client.id": "my-app-1",
-    "group.id": "test-group",
+    "group.id": "test-app",
     "metadata.broker.list": "localhost:9092",
   },
   {}
@@ -23,7 +24,7 @@ const listenKafka = async () => {
       console.log("Listening Kafka");
     })
     .on("data", (data) => {
-      console.log("Message from Kafka", data.value.toString());
+      console.log("Message from Kafka", eventType.fromBuffer(data.value));
     })
     .on("event.error", (err) => {
       console.error("Error from Kafka", err);
@@ -33,9 +34,12 @@ const listenKafka = async () => {
     });
 };
 
-app.get("/", async (req, res) => {
+app.get("/", async (_req, res) => {
   const data = {
-    message: "Hello World App1",
+    id: "1",
+    type: "test",
+    timestamp: new Date().toISOString(),
+    data: "test data app1",
   };
 
   const producer = Kafka.Producer.createWriteStream(
@@ -48,7 +52,7 @@ app.get("/", async (req, res) => {
     }
   );
 
-  const responseStream = producer.write(JSON.stringify(data));
+  const responseStream = producer.write(eventType.toBuffer(data));
 
   if (responseStream) {
     console.log("Message sent to Kafka");
