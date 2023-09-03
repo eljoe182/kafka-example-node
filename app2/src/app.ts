@@ -1,22 +1,22 @@
 import express from "express";
 import AppRoutes from "./routes";
-import KafkaFactory from "./kafka";
+import KafkaClient from "./kafka/Client";
 
 export default class Server {
   public app: express.Application;
   public port: number;
 
   constructor(port: number) {
-    this.app = express();
     this.port = port;
+    this.app = express();
     const router = new AppRoutes(express.Router());
     this.app.use(express.json());
-    this.app.use(express.urlencoded({ extended: false }));
+    this.app.use(express.urlencoded({ extended: true }));
     this.app.use(router.getRoutes());
   }
 
   async events() {
-    const kafka = new KafkaFactory();
+    const kafka = new KafkaClient();
     await kafka.consumer();
   }
 

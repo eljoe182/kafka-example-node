@@ -1,27 +1,31 @@
 import express from "express";
-import { AppRouter } from "./routes";
-import KafkaClient from "./kafka";
+import AppRouter from "./routes";
+import KafkaClient from "./kafka/Client";
 
 export default class Server {
   private port: number;
   private app: express.Application;
-  private kafka: KafkaClient;
 
   constructor(port: number) {
     this.port = port;
     this.app = express();
     const router = new AppRouter(express.Router());
-    router.init();
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
-    this.app.use(router.getRouter());
-    this.kafka = new KafkaClient();
+    this.app.use(router.getRoutes());
+  }
+
+  async events() {
+    const kafka = new KafkaClient();
+    await kafka.consumer();
   }
 
   public start(): void {
     this.app.listen(this.port, () => {
       console.log(`Server is running on port ${this.port}`);
     });
-    this.kafka.consumer();
+    this.events().catch((err) => {
+      console.error("Error listening Kafka", err);
+    });
   }
 }

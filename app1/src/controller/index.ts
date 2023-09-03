@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import KafkaProducer from "../kafka/producer";
+import KafkaProducer from "../kafka/Producer";
 
-export class AppController extends KafkaProducer {
+export default class AppController extends KafkaProducer {
   public sendMessage(_req: Request, res: Response): void {
     const data = {
       id: "1",

@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import KafkaFactory from "../kafka";
+import KafkaProducer from "../kafka/Producer";
 
-export default class AppController {
-  static async sendMessage(_req: Request, res: Response) {
+export default class AppController extends KafkaProducer {
+  public async sendMessage(_req: Request, res: Response) {
     const data = {
       id: "1",
       type: "test",
@@ -10,10 +10,8 @@ export default class AppController {
       data: "test data app2",
     };
 
-    const kafkaProducer = new KafkaFactory();
+    const response = await this.send("topic_51", data);
 
-    const response = await kafkaProducer.producer("topic_51", data);
-
-    res.send({ data, response });
+    res.status(200).send({ data, response });
   }
 }

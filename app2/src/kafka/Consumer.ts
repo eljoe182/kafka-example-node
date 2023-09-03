@@ -1,8 +1,8 @@
-import KafkaClient from "./client";
-import KafkaDeserializer, { Message } from "./deserializer";
+import KafkaFactory from "./ClientFactory";
+import KafkaDeserializer from "./Deserializer";
 
 export default class KafkaConsumer extends KafkaDeserializer {
-  constructor(private client: KafkaClient) {
+  constructor(private client: KafkaFactory) {
     super();
   }
 

@@ -1,7 +1,7 @@
-import { KafkaConfigOptions } from "./config";
 import { Kafka } from "kafkajs";
+import { KafkaConfigOptions } from "./Config";
 
-export default class KafkaClient {
+export default class KafkaFactory {
   public client: Kafka;
   constructor(private config: KafkaConfigOptions) {
     this.client = new Kafka({

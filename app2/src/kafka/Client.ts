@@ -1,17 +1,17 @@
-import KafkaClient from "./client";
-import KafkaConfig, { KafkaConfigOptions } from "./config";
-import KafkaConsumer from "./consumer";
-import KafkaProducer from "./producer";
+import KafkaFactory from "./ClientFactory";
+import KafkaConfig, { KafkaConfigOptions } from "./Config";
+import KafkaConsumer from "./Consumer";
+import KafkaProducer from "./Producer";
 
-export default class KafkaFactory {
+export default class KafkaClient {
   readonly kafkaConfig: KafkaConfigOptions;
-  readonly kafkaClient: KafkaClient;
+  readonly kafkaClient: KafkaFactory;
   kafkaConsumer: KafkaConsumer;
   kafkaProducer: KafkaProducer;
 
   constructor() {
     this.kafkaConfig = KafkaConfig.getConfig();
-    this.kafkaClient = new KafkaClient(this.kafkaConfig);
+    this.kafkaClient = new KafkaFactory(this.kafkaConfig);
     this.kafkaConsumer = new KafkaConsumer(this.kafkaClient);
     this.kafkaProducer = new KafkaProducer(this.kafkaClient);
   }
