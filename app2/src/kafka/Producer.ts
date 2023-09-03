@@ -1,7 +1,10 @@
 import KafkaClient from "./Client";
+import KafkaSerializer from "./Serializer";
 
-export default class KafkaProducer {
-  constructor(private client: KafkaClient) {}
+export default class KafkaProducer extends KafkaSerializer<any> {
+  constructor(private client: KafkaClient) {
+    super();
+  }
 
   async send(topic: string, data: any) {
     const producer = await this.client.producerInstance();
@@ -10,7 +13,7 @@ export default class KafkaProducer {
       topic,
       messages: [
         {
-          value: JSON.stringify(data),
+          value: this.serialize(data),
         },
       ],
     });
