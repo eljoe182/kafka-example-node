@@ -13,7 +13,10 @@ export default class AppRoutes {
   }
 
   private init() {
-    this.router.get("/", this.appController.sendMessage.bind(this.appController));
+    this.router.get(
+      "/",
+      this.appController.sendMessage.bind(this.appController)
+    );
   }
 
   public getRoutes() {

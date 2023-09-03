@@ -1,6 +1,7 @@
 import express from "express";
 import AppRouter from "./routes";
 import KafkaClient from "./kafka/Client";
+import KafkaConsumer from "./kafka/Consumer";
 
 export default class Server {
   private port: number;
@@ -16,8 +17,9 @@ export default class Server {
   }
 
   async events() {
-    const kafka = new KafkaClient();
-    await kafka.consumer();
+    const kafkaClient = new KafkaClient();
+    const kafkaConsumer = new KafkaConsumer(kafkaClient);
+    await kafkaConsumer.listen(["topic_51"]);
   }
 
   public start(): void {

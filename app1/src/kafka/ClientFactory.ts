@@ -1,9 +1,9 @@
 import { KafkaConsumer, Producer } from "node-rdkafka";
 import { KafkaConfigOptions } from "./Config";
 
-export default class ClientFactory {
+export default class KafkaFactory {
   constructor(private config: KafkaConfigOptions) {}
-  public consumer() {
+  public consumerInstance() {
     return new KafkaConsumer(
       {
         "client.id": this.config.clientId,
@@ -14,7 +14,7 @@ export default class ClientFactory {
     );
   }
 
-  public producer() {
+  public producerInstance() {
     return new Producer(
       {
         "client.id": this.config.clientId,

@@ -1,28 +1,28 @@
-import Kafka from "node-rdkafka";
 import KafkaSerializer from "./Serializer";
-import { Message } from "./Message";
+import KafkaClient from "./Client";
 
 
-export default class KafkaProducer extends KafkaSerializer<Message> {
-  constructor(private client: Kafka.Producer) {
+export default class KafkaProducer extends KafkaSerializer<any> {
+  constructor(private client: KafkaClient) {
     super();
   }
 
   async send(topic: string, data: any) {
-    this.client.connect();
-    this.client
+    const producer = this.client.producerInstance();
+    producer.connect();
+    producer
       .on("ready", () => {
-        this.client.produce(
+        producer.produce(
           topic,
           null,
           this.serialize(data),
           null,
           Date.now()
         );
-        this.client.flush(10000, () => {
+        producer.flush(10000, () => {
           console.log("Message sent to Kafka");
         });
-        this.client.disconnect();
+        producer.disconnect();
       })
       .on("event.error", (err) => {
         console.error("Error from Kafka", err);

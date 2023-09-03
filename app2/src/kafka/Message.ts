@@ -1,4 +1,4 @@
-interface IHeaders {
+type IHeaders = {
   [key: string]: Buffer | string | (Buffer | string)[] | undefined;
 }
 

@@ -1,18 +1,19 @@
-import Kafka from "node-rdkafka";
 import { KafkaDeserializer } from "./Deserializer";
 import { Message } from "./Message";
+import KafkaClient from "./Client";
 
 export default class KafkaConsumer extends KafkaDeserializer {
-  constructor(readonly client: Kafka.KafkaConsumer) {
+  constructor(readonly client: KafkaClient) {
     super();
   }
 
   async listen(topics: string[]) {
-    this.client.connect();
-    this.client
+    const consumer = this.client.consumerInstance();
+    consumer.connect();
+    consumer
       .on("ready", () => {
-        this.client.subscribe(topics);
-        this.client.consume();
+        consumer.subscribe(topics);
+        consumer.consume();
         console.log("Listening Kafka on topics:", topics.join(", "));
       })
       .on("data", (data: Message) => {
