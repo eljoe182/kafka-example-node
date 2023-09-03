@@ -1,13 +1,14 @@
 import { Router } from "express";
 import AppController from "../controller";
-import KafkaFactory from "../kafka/ClientFactory";
-import KafkaConfig from "../kafka/Config";
+import KafkaProducer from "../kafka/Producer";
+import KafkaClient from "../kafka/Client";
 
 export default class AppRoutes {
   private appController: AppController;
   constructor(private router: Router) {
-    const kafkaClient = new KafkaFactory(KafkaConfig.getConfig());
-    this.appController = new AppController(kafkaClient);
+    const kafkaClient = new KafkaClient();
+    const kafkaProducer = new KafkaProducer(kafkaClient);
+    this.appController = new AppController(kafkaProducer);
     this.init();
   }
 

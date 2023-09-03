@@ -1,10 +1,10 @@
-import KafkaFactory from "./ClientFactory";
+import KafkaClient from "./Client";
 
 export default class KafkaProducer {
-  constructor(private client: KafkaFactory) {}
+  constructor(private client: KafkaClient) {}
 
   async send(topic: string, data: any) {
-    const producer = this.client.client.producer();
+    const producer = await this.client.producerInstance();
     await producer.connect();
     const responseStream = await producer.send({
       topic,
